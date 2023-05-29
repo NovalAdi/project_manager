@@ -9,9 +9,12 @@ import 'package:project_manager/models/task.dart';
 class TaskService {
   TaskService._();
 
-  static Future<List<Task>?> getTask({required String id}) async {
+  static Future<List<Task>?> getTask({
+    required String idProject,
+    required String idUser,
+  }) async {
     try {
-      final url = "${ApiConfig.baseUrl}/${ApiConfig.taskEndpoint}/$id";
+      final url = "${ApiConfig.baseUrl}/${ApiConfig.taskProjectEndpoint}/$idProject/user/$idUser";
       final token = await SecureStorage.getToken();
       final header = {'Authorization': 'Bearer $token'};
       final response = await http.get(Uri.parse(url), headers: header);

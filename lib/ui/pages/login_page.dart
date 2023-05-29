@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_manager/cubit/home/home_cubit.dart';
 
 import '../../service/auth_service.dart';
 import '../../utils/utils.dart';
@@ -25,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding:
-        const EdgeInsets.only(top: 50, right: 24, left: 24, bottom: 24),
+            const EdgeInsets.only(top: 50, right: 24, left: 24, bottom: 24),
         child: Form(
           key: _formKey,
           child: Column(
@@ -125,13 +129,16 @@ class _LoginPageState extends State<LoginPage> {
                           registerValid = res;
                         });
                       });
-
+                      if (!mounted) return;
                       if (registerValid) {
-                        Navigator.push(
+                        log('VALID');
+                        context.read<HomeCubit>().init();
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (_) => const HomePage(),
                           ),
+                          (_) => false,
                         );
                       } else {
                         showDialog(
@@ -139,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (_) => const AlertDialog(
                             title: Text('Error'),
                             content:
-                            Text('Register is not valid or a server error'),
+                                Text('Register is not valid or a server error'),
                           ),
                         );
                       }

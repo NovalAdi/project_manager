@@ -7,4 +7,6 @@ class ApiConfig {
   static const logoutEndpoint = 'logout';
   static const projectEndpoint = 'project';
   static const taskEndpoint = 'task';
+  static const participantEndpoint = 'participants';
+  static const taskProjectEndpoint = 'task/project';
 }

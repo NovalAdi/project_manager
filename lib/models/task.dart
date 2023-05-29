@@ -5,12 +5,14 @@ class Task extends Equatable {
   final String? name;
   final String? desk;
   final String? status;
+  final bool? done;
 
-  Task({
+  const Task({
     this.id,
     this.name,
     this.desk,
     this.status,
+    this.done,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class Task extends Equatable {
       name: json['name'],
       desk: json['desk'],
       status: json['status'],
+      done: json['status'] == 'done',
     );
   }
 
@@ -26,11 +29,13 @@ class Task extends Equatable {
     String? name,
     String? desk,
     String? status,
+    bool? done,
   }) {
     return Task(
       name: name ?? this.name,
       desk: desk ?? this.desk,
       status: status ?? this.status,
+      done: done ?? this.done,
     );
   }
 
@@ -39,5 +44,6 @@ class Task extends Equatable {
         name,
         desk,
         status,
+        done,
       ];
 }

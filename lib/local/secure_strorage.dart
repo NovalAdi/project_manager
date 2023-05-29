@@ -17,6 +17,7 @@ class SecureStorage {
 
   static const _keyUser = '_user';
   static const _keyToken = '_token';
+  static const _keyMainProjectIndex = '_mainProject';
 
   static Future<void> cacheToken({
     required String token,
@@ -87,6 +88,45 @@ class SecureStorage {
     try {
       await _storage.delete(key: _keyUser);
       await cacheUser(user: user);
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  static Future<void> cacheMainProjectIndex({
+    required String index,
+  }) async {
+    try {
+      // !Nyimpen di storage
+      await _storage.write(
+        key: _keyMainProjectIndex,
+        value: index,
+      );
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  static Future<String?> getMainProjectIndex() async {
+    try {
+      final mainProjectIndex = await _storage.read(
+        key: _keyMainProjectIndex,
+      );
+      if (mainProjectIndex != null) {
+        return mainProjectIndex;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('$e');
+      return null;
+    }
+  }
+
+  static Future<void> updateMainProjectIndex(String index) async {
+    try {
+      await _storage.delete(key: _keyMainProjectIndex);
+      await cacheMainProjectIndex(index: index);
     } catch (e) {
       log('$e');
     }

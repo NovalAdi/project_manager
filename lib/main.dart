@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_manager/cubit/home/home_cubit.dart';
+import 'package:project_manager/cubit/participant/participant_cubit.dart';
+import 'package:project_manager/cubit/project/project_cubit.dart';
+import 'package:project_manager/cubit/task/task_cubit.dart';
 import 'package:project_manager/ui/pages/home_page.dart';
 import 'package:project_manager/ui/pages/login_page.dart';
 
@@ -8,7 +11,7 @@ import 'local/secure_strorage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await SecureStorage.deleteDataLokal();
+
   runApp(const MyApp());
 }
 
@@ -43,8 +46,22 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit()..getUser(),
-
+          create: (context) => HomeCubit()..init(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              ParticipantCubit(cubit: BlocProvider.of<HomeCubit>(context))
+                ..init(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              TaskCubit(cubit: BlocProvider.of<HomeCubit>(context))..init(),
+        ),
+        BlocProvider(
+          create: (context) => ProjectCubit(
+            cubitHome: BlocProvider.of<HomeCubit>(context),
+            cubitTask: BlocProvider.of<TaskCubit>(context)
+          ),
         ),
       ],
       child: MaterialApp(

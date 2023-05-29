@@ -1,6 +1,3 @@
-import 'package:project_manager/models/task.dart';
-import 'package:project_manager/models/user.dart';
-
 class Project {
   final int? id;
   final String? name;
@@ -8,9 +5,11 @@ class Project {
   final String? token;
   final DateTime? deadline;
   final int? dayLeft;
+  final int? totalTask;
   final num? percentage;
-  final List<User>? participant;
-  final List<Task>? tasks;
+  final int? done;
+  final int? pending;
+  final int? undone;
 
   Project({
     this.id,
@@ -19,9 +18,11 @@ class Project {
     this.token,
     this.deadline,
     this.dayLeft,
+    this.totalTask,
     this.percentage,
-    this.participant,
-    this.tasks,
+    this.done,
+    this.pending,
+    this.undone,
   });
 
   factory Project.fromJson(Map<String, dynamic> json) {
@@ -32,9 +33,11 @@ class Project {
       token: json['token'],
       deadline: DateTime.parse(json['deadline']),
       dayLeft: json['day_left'],
+      totalTask: json['total_task'],
       percentage: json['percentage'],
-      participant: json['participant'] != null ? (json['participant'] as List).map((e) => User.fromJson(e)).toList() : [],
-      tasks: json['tasks'] != null ? (json['tasks'] as List).map((e) => Task.fromJson(e)).toList() : []
+      done: json['done'],
+      pending: json['pending'],
+      undone: json['undone'],
     );
   }
 
@@ -46,8 +49,10 @@ class Project {
     data['token'] = token;
     data['deadline'] = deadline;
     data['day_left'] = dayLeft;
-    data['participant'] = participant;
-    data['tasks'] = tasks;
+    data['total_task'] = totalTask;
+    data['done'] = done;
+    data['pending'] = pending;
+    data['undone'] = undone;
     return data;
   }
 }

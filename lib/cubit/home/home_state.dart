@@ -1,37 +1,52 @@
 part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
-  final bool isLoading;
-  final bool isTaskLoading;
-  final List<Task> listTask;
-  final String status;
-  final User? user;
-  final Project? mainProject;
+  bool isLoading;
+  bool isTaskLoading;
+  User? user;
+  int mainProjectIndex;
+  List<Project>? listProject;
+  Project? project;
+  int done;
+  int pending;
+  int undone;
+  num percentage;
 
-  const HomeState({
+  HomeState({
     this.isLoading = false,
     this.isTaskLoading = false,
-    this.listTask = const [],
-    this.status = 'undone',
     this.user,
-    this.mainProject,
+    this.listProject,
+    this.project,
+    this.mainProjectIndex = 0,
+    this.done = 0,
+    this.pending = 0,
+    this.undone = 0,
+    this.percentage = 0,
   });
 
   HomeState copyWith({
     bool? isLoading,
     bool? isTaskLoading,
-    List<Task>? listTask,
-    String? status,
     User? user,
-    Project? mainProject,
+    List<Project>? listProject,
+    Project? project,
+    int? mainProjectIndex,
+    int? done,
+    int? pending,
+    int? undone,
+    num? percentage,
   }) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,
       isTaskLoading: isTaskLoading ?? this.isTaskLoading,
-      listTask: listTask ?? this.listTask,
-      status: status ?? this.status,
       user: user ?? this.user,
-      mainProject: mainProject ?? this.mainProject,
+      listProject: listProject ?? this.listProject,
+      project: project ?? this.project,
+      mainProjectIndex: mainProjectIndex ?? this.mainProjectIndex,
+      done: done ?? this.done,
+      pending: pending ?? this.pending,
+      percentage: percentage ?? this.pending,
     );
   }
 
@@ -39,9 +54,13 @@ class HomeState extends Equatable {
   List<Object?> get props => [
         isLoading,
         isTaskLoading,
-        listTask,
-        status,
         user,
-        mainProject,
+        listProject,
+        project,
+        mainProjectIndex,
+        done,
+        pending,
+        undone,
+        percentage,
       ];
 }
