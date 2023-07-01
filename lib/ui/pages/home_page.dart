@@ -1,8 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_manager/cubit/home/home_cubit.dart';
+import 'package:project_manager/cubit/notif/notif_cubit.dart';
 import 'package:project_manager/cubit/project/project_cubit.dart';
+import 'package:project_manager/cubit/task/task_cubit.dart';
 import 'package:project_manager/ui/pages/list_project_page.dart';
+import 'package:project_manager/ui/pages/profile_page.dart';
+import 'package:project_manager/ui/widget/custom_button.dart';
+import 'package:project_manager/ui/widget/notif_button_widget.dart';
 import 'package:project_manager/ui/widget/project_widget.dart';
 import 'package:project_manager/ui/widget/task_widget.dart';
 
@@ -14,20 +21,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  Future _onRefresh() async{
+    log('on refresh jalan');
+    context.read<ProjectCubit>().getListProject();
+    context.read<HomeCubit>().init();
+    context.read<TaskCubit>().init();
+    context.read<NotifCubit>().init();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      body: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state.user != null) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (state.user != null) {
+              return ListView(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(
@@ -42,26 +59,30 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.network(
-                                  state.user!.image!,
-                                  height: 70,
-                                  width: 70,
+                            GestureDetector(
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.network(
+                                    state.user!.image!,
+                                    height: 70,
+                                    width: 70,
+                                  ),
                                 ),
                               ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const ProfilePage(),
+                                  ),
+                                );
+                              },
                             ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: const Icon(
-                                Icons.notifications_none_outlined,
-                                size: 30,
-                              ),
-                            ),
+                            const NotifButtonWidget(),
                           ],
                         ),
                         const SizedBox(height: 18),
@@ -69,6 +90,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   state.user!.username!,
@@ -81,36 +103,23 @@ class _HomePageState extends State<HomePage> {
                                 Text(state.user!.email!),
                               ],
                             ),
-                            GestureDetector(
+                            CustomButton(
+                              text: 'Change Project',
+                              textColor: Color(0xff2AAAD2),
+                              backgroundColor: Color(0xff92E5FF),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) {
-                                      context.read<ProjectCubit>().getListProject();
+                                      context
+                                          .read<ProjectCubit>()
+                                          .getListProject();
                                       return const ListProjectPage();
                                     },
                                   ),
                                 );
                               },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xff92E5FF),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  child: Text(
-                                    'Change Project',
-                                    style: const TextStyle(
-                                      color: Color(0xff2AAAD2),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -118,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   ProjectWidget(user: state.user!),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: const Text(
@@ -129,14 +138,15 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 14),
                   TaskWidget(),
                 ],
-              ),
-            );
-          }
+              );
+            }
 
-          return SizedBox();
-        },
+            return SizedBox();
+          },
+        ),
       ),
     );
   }

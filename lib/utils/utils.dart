@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_manager/cubit/home/home_cubit.dart';
+import 'package:project_manager/cubit/task/task_cubit.dart';
+
+import '../models/task.dart';
+import '../ui/widget/custom_button.dart';
 
 class Utils {
   static Future<void> dialog(
@@ -6,7 +12,7 @@ class Utils {
       [bool mounted = true]) async {
     // show the loading dialog
     showDialog(
-      // The user CANNOT close this dialog  by pressing outsite it
+        // The user CANNOT close this dialog  by pressing outsite it
         barrierDismissible: false,
         context: context,
         builder: (_) {
@@ -47,5 +53,55 @@ class Utils {
     // We use "mounted" variable to get rid of the "Do not use BuildContexts across async gaps" warning
     if (!mounted) return;
     Navigator.of(context).pop();
+  }
+
+  static void resubmitDialog(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Do you want to resubmit this task',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 24),
+                Row(
+                  children: [
+                    CustomButton(
+                      text: 'Yes',
+                      textColor: Color(0xff27DD44),
+                      backgroundColor: Color(0xff92FFA3),
+                      onTap: () {
+                        context.read<TaskCubit>().setStatus(id, status: 'done');
+                        context.read<TaskCubit>().init();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    SizedBox(width: 15),
+                    CustomButton(
+                      text: 'No',
+                      textColor: Color(0xFFDD2727),
+                      backgroundColor: Color(0xFFFF9292),
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

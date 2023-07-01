@@ -24,6 +24,13 @@ class TaskCubit extends Cubit<TaskState> {
     getTask();
   }
 
+  void reset() {
+    emit(state.copyWith(
+      isLoading: false,
+      tasks: null,
+    ));
+  }
+
   void getTask() async {
     if (cubit.state.project == null || cubit.state.user == null) return;
     emit(state.copyWith(isLoading: true));
@@ -34,12 +41,16 @@ class TaskCubit extends Cubit<TaskState> {
     emit(state.copyWith(isLoading: false));
   }
 
-  void setStatus(Task task) async {
-    String status = 'undone';
-    if (task.status == 'undone') {
-      status = 'done';
+  void setStatus(int taskId, {String taskStatus = '', String status = ''}) async {
+    String statusSend = 'undone';
+    if (taskStatus == 'undone') {
+      statusSend = 'done';
     }
-    await TaskService.updateTask(id: task.id.toString(), status: status);
+    if (status == '') {
+      await TaskService.updateTask(id: taskId.toString(), status: statusSend);
+    } else {
+      await TaskService.updateTask(id: taskId.toString(), status: status);
+    }
     getTask();
   }
 }

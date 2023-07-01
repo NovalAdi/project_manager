@@ -5,7 +5,7 @@ class HomeState extends Equatable {
   bool isTaskLoading;
   User? user;
   int mainProjectIndex;
-  List<Project>? listProject;
+  List<Project> listProject;
   Project? project;
   int done;
   int pending;
@@ -16,7 +16,7 @@ class HomeState extends Equatable {
     this.isLoading = false,
     this.isTaskLoading = false,
     this.user,
-    this.listProject,
+    this.listProject = const [],
     this.project,
     this.mainProjectIndex = 0,
     this.done = 0,
@@ -24,6 +24,11 @@ class HomeState extends Equatable {
     this.undone = 0,
     this.percentage = 0,
   });
+
+  HomeState changeNullProject()=> HomeState(
+
+    project: null
+  );
 
   HomeState copyWith({
     bool? isLoading,

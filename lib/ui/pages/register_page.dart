@@ -4,7 +4,6 @@ import 'package:validators/validators.dart';
 
 import '../../service/auth_service.dart';
 import '../../utils/utils.dart';
-import 'home_page.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -157,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const HomePage(),
+                            builder: (_) => const LoginPage(),
                           ),
                           (_) => false,
                         );

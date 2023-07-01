@@ -117,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   onPressed: () async {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     if (_formKey.currentState!.validate()) {
                       bool registerValid = false;
 
@@ -146,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (_) => const AlertDialog(
                             title: Text('Error'),
                             content:
-                                Text('Register is not valid or a server error'),
+                                Text('Login is not valid or a server error'),
                           ),
                         );
                       }

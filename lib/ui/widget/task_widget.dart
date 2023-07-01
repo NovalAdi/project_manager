@@ -18,11 +18,11 @@ class TaskWidget extends StatelessWidget {
             ),
           );
         }
-        if (state.tasks == null) {
+        if (state.tasks == null || state.tasks!.isEmpty) {
           return Container(
-            margin: EdgeInsets.only(top: 20, bottom: 30),
-            child: Center(
-              child: Text("This project doesn't have any tasks"),
+            margin: EdgeInsets.only(top: 30),
+            child: const Center(
+              child: Text("You don't have any task in this project"),
             ),
           );
         }

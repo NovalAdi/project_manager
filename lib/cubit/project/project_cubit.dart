@@ -19,16 +19,9 @@ class ProjectCubit extends Cubit<ProjectState> {
   ProjectCubit({required this.cubitHome, required this.cubitTask})
       : super(ProjectState());
 
-  @override
-  void onChange(Change<ProjectState> change) {
-    log('$change');
-    super.onChange(change);
-  }
-
   void getListProject() async {
     emit(state.copyWith(isLoading: true));
-    final listProject = await ProjectService.getMainProject(
-        id: cubitHome.state.user!.id.toString());
+    final listProject = await ProjectService.getMainProject(id: cubitHome.state.user!.id.toString());
     emit(state.copyWith(listProject: listProject));
     emit(state.copyWith(isLoading: false));
   }

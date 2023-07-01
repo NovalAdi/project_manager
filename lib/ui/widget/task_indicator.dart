@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_manager/ui/widget/custom_button.dart';
+import 'package:project_manager/utils/utils.dart';
 
 import '../../cubit/task/task_cubit.dart';
 import '../../models/task.dart';
@@ -16,9 +18,21 @@ class TaskIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
+        if (task.status == 'pending') {
+          return CustomButton(
+            text: 'Pending',
+            textColor: Color(0xffCEBD24),
+            backgroundColor: Color(0xffFBF454),
+            onTap: () {
+              Utils.resubmitDialog(context, task.id!);
+            },
+          );
+        }
         return GestureDetector(
           onTap: () {
-            context.read<TaskCubit>().setStatus(task);
+            context
+                .read<TaskCubit>()
+                .setStatus(task.id!, taskStatus: task.status!);
           },
           child: Container(
             decoration: BoxDecoration(
